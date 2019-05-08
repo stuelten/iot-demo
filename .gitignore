@@ -1,16 +1,14 @@
-# Compiled class file
-*.class
+# build dir
+target
 
-# Log file
+# Log files
 *.log
 
 # IDEA files
 .idea
+/.idea/
 
-# build dir
-target
-
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.nar
