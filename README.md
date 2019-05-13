@@ -1,4 +1,4 @@
 # iot-demo
 Some simple IoT examples.
 
-There are some sensor examples for Raspis using MQTT for communication.
+There are some examples using Raspis with some sensors and MQTT for communication.
