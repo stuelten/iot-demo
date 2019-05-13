@@ -7,17 +7,6 @@ import java.util.concurrent.ThreadFactory;
 public class Main {
     public static final int SENSORS = 22;
     private static final int DURATION_DEFAULT_IN_SECONDS = 10;
-    private static final Object[] LOCK = {};
-
-    public static void sleep(int timeoutMillis) {
-        try {
-            synchronized (LOCK) {
-                LOCK.wait(timeoutMillis);
-            }
-        } catch (InterruptedException ie) {
-            throw new RuntimeException(ie);
-        }
-    }
 
     public static void main(String[] args) {
         int durationInSeconds = args.length > 0 ? Integer.parseInt(args[0]) :
@@ -36,10 +25,10 @@ public class Main {
         Executor executorSensors = Executors.newFixedThreadPool(SENSORS);
         for (int i = 0; i < SENSORS; i++) {
             executorSensors.execute(new DemoTimeSensor());
-            sleep(1000 / SENSORS);
+            Sleeper.sleep(1000 / SENSORS);
         }
 
-        sleep(durationInSeconds * 1000);
+        Sleeper.sleep(durationInSeconds * 1000);
 
         System.out.println("Send: " + DemoTimeSensor.msgSend + ", received: " + DemoTimeConsumer.msgReceived);
 

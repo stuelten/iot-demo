@@ -11,9 +11,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public abstract class AbstractSensorPolling implements Runnable {
 
-    public static final String TOPIC_PREFIX = "sensor/";
-    public static final String DEFAULT_MQTT_BROKER = "broker.hivemq.com";
-
     protected static final AtomicLong msgSend = new AtomicLong();
     protected static final AtomicLong sensors = new AtomicLong();
 
@@ -36,26 +33,26 @@ public abstract class AbstractSensorPolling implements Runnable {
         sensors.incrementAndGet();
 
         this.id = id;
-        this.topic = TOPIC_PREFIX + name + "/";
-        this.serverHostname = DEFAULT_MQTT_BROKER;
+        this.topic = MqttConst.TOPIC_PREFIX + name + "/";
+        this.serverHostname = MqttConst.DEFAULT_MQTT_BROKER;
     }
 
     public void run() {
         running = true;
 
-        log("Initialize " + topic);
+        LOGGER.debug("Initialize '{}'", topic);
         Mqtt5BlockingClient client = initializeConnection();
 
-        log("Connecting...");
+        LOGGER.info("Connecting...");
         client.connect();
 
         sendStatusMessage(client);
 
         while (running) {
-            String message = null;
+            String message;
             try {
                 message = createMessage();
-                log(message);
+                LOGGER.debug("Message: '{}'", message);
                 sendMessage(client, message);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -127,14 +124,6 @@ public abstract class AbstractSensorPolling implements Runnable {
 
     protected String getId() {
         return "[" + id + "]";
-    }
-
-    // ----------------------------------------------------------------------
-    // ugly stuff
-
-    protected void log(String s) {
-        //System.out.println(/*LocalDateTime.now() + */
-        //System.out.println("   SEN " + s);
     }
 
 }

@@ -18,9 +18,6 @@ public class DemoTimeConsumer implements Runnable {
         System.out.println(/*LocalDateTime.now() + " " +*/ "CON    " + s);
     }
 
-    // ----------------------------------------------------------------------
-    // ugly stuff
-
     @Override
     public void run() {
         log("Initialize...");
