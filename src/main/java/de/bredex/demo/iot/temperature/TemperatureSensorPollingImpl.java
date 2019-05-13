@@ -14,7 +14,10 @@ import java.text.NumberFormat;
  */
 public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
 
-    private final NumberFormat FORMATTER = new DecimalFormat("##0.##");
+    /**
+     * Format temperature some accuracy.
+     */
+    private final NumberFormat FORMATTER = new DecimalFormat("##0.#");
 
     public TemperatureSensorPollingImpl(String id) {
         super(id, "temperature");
@@ -45,7 +48,7 @@ public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
         config[0] = 0x00;
         config[1] = 0x00;
         device.write(0x01, config, 0, 2);
-        // Select resolution rgister
+        // Select resolution register
         // Resolution = +0.0625 / C
         device.write(0x08, (byte) 0x03);
         Thread.sleep(300);
