@@ -9,26 +9,28 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-public class TemperaturSensorPollingImpl extends AbstractSensorPolling {
+/**
+ * Some simple MQTT sender for MCP9805 temperature sensors on the raspi.
+ */
+public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
 
     private final NumberFormat FORMATTER = new DecimalFormat("##0.##");
 
-    protected TemperaturSensorPollingImpl(String id) {
+    public TemperatureSensorPollingImpl(String id) {
         super(id, "temperature");
     }
 
     @Override
     protected String createMessage() throws Exception {
-        String ret = "UNKNOWN";
+        String ret;
 
-        double temperature = 0;
-        temperature = readSensor();
+        double temperature = readSensor();
         ret = FORMATTER.format(temperature);
 
         return ret;
     }
 
-    protected double readSensor() throws IOException, I2CFactory.UnsupportedBusNumberException, InterruptedException {
+    private double readSensor() throws IOException, I2CFactory.UnsupportedBusNumberException, InterruptedException {
         double ret;
 
         // Create I2C bus

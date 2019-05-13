@@ -35,26 +35,30 @@ public class DemoTimeSensor implements Runnable {
         log("Connecting...");
         client.connect();
 
-        client.publishWith()
-                .topic("sensor/" + id + "/status")
-                .qos(MqttQos.AT_LEAST_ONCE)
-                .retain(true)
-                .payload("online".getBytes())
-                .send();
-
-        while (true) {
-            String message = createMessage();
-            log(message);
-
+        try {
             client.publishWith()
-                    .topic("test/topic/" + id)
+                    .topic("sensor/" + id + "/status")
                     .qos(MqttQos.AT_LEAST_ONCE)
                     .retain(true)
-                    .payload(message.getBytes())
+                    .payload("online".getBytes())
                     .send();
-            msgSend.getAndIncrement();
 
-            Main.sleep(10);
+            while (true) {
+                String message = createMessage();
+                log(message);
+
+                client.publishWith()
+                        .topic("test/topic/" + id)
+                        .qos(MqttQos.AT_LEAST_ONCE)
+                        .retain(true)
+                        .payload(message.getBytes())
+                        .send();
+                msgSend.getAndIncrement();
+
+                Main.sleep(10);
+            }
+        } finally {
+            client.disconnect();
         }
     }
 
