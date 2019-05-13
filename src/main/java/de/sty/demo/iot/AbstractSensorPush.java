@@ -1,4 +1,4 @@
-package de.bredex.demo.iot;
+package de.sty.demo.iot;
 
 public class AbstractSensorPush {
 

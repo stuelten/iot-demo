@@ -1,9 +1,9 @@
-package de.bredex.demo.iot.temperature;
+package de.sty.demo.iot.temperature;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
-import de.bredex.demo.iot.AbstractSensorPolling;
+import de.sty.demo.iot.AbstractSensorPolling;
 
 import java.io.IOException;
 import java.text.DecimalFormat;

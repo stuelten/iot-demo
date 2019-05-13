@@ -1,4 +1,4 @@
-package de.bredex.demo.iot;
+package de.sty.demo.iot;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

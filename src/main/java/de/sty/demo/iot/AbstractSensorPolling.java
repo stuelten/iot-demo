@@ -1,4 +1,4 @@
-package de.bredex.demo.iot;
+package de.sty.demo.iot;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
