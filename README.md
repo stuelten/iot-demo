@@ -1,4 +1,5 @@
 # iot-demo
-Some simple IoT examples.
+###### Some simple IoT examples
 
-There are some examples using Raspis with some sensors and MQTT for communication.
+In `src/main/java` are some examples, how to use hardware sensors 
+and send there readings via MQTT on a Raspberry Pi.
