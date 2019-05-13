@@ -1,4 +1,4 @@
-package de.bredex.demo.iot.temp;
+package de.bredex.demo.iot.temperature;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
@@ -51,7 +51,7 @@ public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
         Thread.sleep(300);
 
         // Read 2 bytes of data from address 0x05(05)
-        // temp msb, temp lsb
+        // temperature msb, temperature lsb
         byte[] data = new byte[2];
         device.read(0x05, data, 0, 2);
 
