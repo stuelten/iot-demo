@@ -23,7 +23,7 @@ public class DemoTimeConsumer implements Runnable {
         log("Initialize...");
         Mqtt5BlockingClient client = Mqtt5Client.builder()
                 .identifier(UUID.randomUUID().toString())
-                .serverHost("broker.hivemq.com")
+                .serverHost(MqttConst.DEFAULT_MQTT_BROKER)
                 .buildBlocking();
         log("Connecting...");
         client.connect();

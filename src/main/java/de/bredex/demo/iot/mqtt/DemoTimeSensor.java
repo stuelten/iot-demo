@@ -26,7 +26,7 @@ public class DemoTimeSensor implements Runnable {
         log("Initialize...");
         Mqtt5BlockingClient client = MqttClient.builder()
                 .identifier(UUID.randomUUID().toString())
-                .serverHost("broker.hivemq.com")
+                .serverHost(MqttConst.DEFAULT_MQTT_BROKER)
                 .useMqttVersion5()
                 .buildBlocking();
 

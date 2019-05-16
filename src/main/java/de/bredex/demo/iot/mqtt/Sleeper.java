@@ -11,7 +11,7 @@ public class Sleeper {
     public static boolean sleep(int timeoutMillis) {
         boolean ret = false;
         try {
-            Thread.currentThread().wait();
+            Thread.currentThread().wait(timeoutMillis);
         } catch (InterruptedException ie) {
             ret = true;
         }
