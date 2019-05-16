@@ -1,4 +1,4 @@
-package de.bredex.demo.iot;
+package de.sty.demo.iot;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
@@ -14,12 +14,10 @@ public class DemoTimeSensor implements Runnable {
     static final AtomicLong msgSend = new AtomicLong();
     private static int sensors = 0;
 
-    // ----------------------------------------------------------------------
-    // ugly stuff
     private String id;
 
     DemoTimeSensor() {
-        int ran = (int) (Main.SENSORS * Math.random());
+        // int ran = (int) (Main.SENSORS * Math.random());
         // id = new DecimalFormat("0000").format(ran);
         id = "" + (char) ((int) 'A' + sensors++);
     }
@@ -55,7 +53,7 @@ public class DemoTimeSensor implements Runnable {
                         .send();
                 msgSend.getAndIncrement();
 
-                Main.sleep(10);
+                Sleeper.sleep(10);
             }
         } finally {
             client.disconnect();

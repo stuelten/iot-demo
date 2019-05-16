@@ -1,4 +1,4 @@
-package de.bredex.demo.iot;
+package de.sty.demo.iot;
 
 import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
 import com.hivemq.client.mqtt.datatypes.MqttQos;
@@ -17,9 +17,6 @@ public class DemoTimeConsumer implements Runnable {
     private static void log(Object s) {
         System.out.println(/*LocalDateTime.now() + " " +*/ "CON    " + s);
     }
-
-    // ----------------------------------------------------------------------
-    // ugly stuff
 
     @Override
     public void run() {

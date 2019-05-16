@@ -1,9 +1,9 @@
-package de.bredex.demo.iot.temp;
+package de.sty.demo.iot.temperature;
 
 import com.pi4j.io.i2c.I2CBus;
 import com.pi4j.io.i2c.I2CDevice;
 import com.pi4j.io.i2c.I2CFactory;
-import de.bredex.demo.iot.AbstractSensorPolling;
+import de.sty.demo.iot.AbstractSensorPolling;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -14,7 +14,10 @@ import java.text.NumberFormat;
  */
 public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
 
-    private final NumberFormat FORMATTER = new DecimalFormat("##0.##");
+    /**
+     * Format temperature some accuracy.
+     */
+    private final NumberFormat FORMATTER = new DecimalFormat("##0.#");
 
     public TemperatureSensorPollingImpl(String id) {
         super(id, "temperature");
@@ -45,13 +48,13 @@ public class TemperatureSensorPollingImpl extends AbstractSensorPolling {
         config[0] = 0x00;
         config[1] = 0x00;
         device.write(0x01, config, 0, 2);
-        // Select resolution rgister
+        // Select resolution register
         // Resolution = +0.0625 / C
         device.write(0x08, (byte) 0x03);
         Thread.sleep(300);
 
         // Read 2 bytes of data from address 0x05(05)
-        // temp msb, temp lsb
+        // temperature msb, temperature lsb
         byte[] data = new byte[2];
         device.read(0x05, data, 0, 2);
 
