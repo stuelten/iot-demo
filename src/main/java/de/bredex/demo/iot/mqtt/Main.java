@@ -1,4 +1,4 @@
-package de.sty.demo.iot;
+package de.bredex.demo.iot.mqtt;
 
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;

@@ -45,9 +45,14 @@ public class Painter {
         for (Snake snake : matrix.getSnakes()) {
             context.setFill(snake.getColor());
             snake.getCells().forEach(cell -> paintCell(cell, CELL_WIDTH, CELL_HEIGHT, context));
+        }
+
+        // Now the collision
+        for (Snake snake : matrix.getSnakes()) {
             if (snake.hasCollided()) {
                 context.setFill(SNAKE_DEAD);
                 paintCell(snake.getHead(), CELL_WIDTH, CELL_HEIGHT, context);
+                break;
             }
         }
     }

@@ -1,4 +1,4 @@
-package de.sty.demo.iot;
+package de.bredex.demo.iot.mqtt;
 
 public interface MqttConst {
 

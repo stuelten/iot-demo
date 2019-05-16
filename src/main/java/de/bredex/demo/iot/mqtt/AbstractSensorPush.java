@@ -1,4 +1,4 @@
-package de.sty.demo.iot;
+package de.bredex.demo.iot.mqtt;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

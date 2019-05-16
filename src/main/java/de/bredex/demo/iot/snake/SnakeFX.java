@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
@@ -16,7 +17,9 @@ import org.slf4j.LoggerFactory;
 public class SnakeFX extends Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(SnakeFX.class);
 
-    private Controller controller;
+    private SnakeController snakeController;
+    private SnakeMqttController snakeMqttController;
+
     private GraphicsContext context;
 
     public static void main(String[] args) {
@@ -44,27 +47,48 @@ public class SnakeFX extends Application {
         primaryStage.setTitle("Snake");
         primaryStage.show();
 
-        reset();
+        setupSnakeController();
+        setupMqttController();
     }
 
-    private void reset() {
-        LOGGER.info("reset: init controller");
+    private void setupSnakeController() {
+        LOGGER.info("setupSnakeController: init snakeController");
 
-        controller = new Controller(context);
+        snakeController = new SnakeController(context);
+        if (snakeMqttController != null) {
+            snakeMqttController.setSnakeController(snakeController);
+        }
 
-        Thread logicThread = new Thread(controller);
-        logicThread.setName(controller.getClass().getName());
+        Thread logicThread = new Thread(snakeController);
+        logicThread.setName(snakeController.getClass().getName());
         logicThread.start();
+    }
+
+    protected void setupMqttController() {
+        LOGGER.info("setupMqttController: init snakeController");
+        snakeMqttController = new SnakeMqttController(snakeController);
+
+        Thread mqttThread = new Thread(snakeMqttController);
+        mqttThread.setName(snakeMqttController.getClass().getName());
+        mqttThread.start();
     }
 
     private void handleKeyPress(KeyEvent e) {
         LOGGER.debug("handleKeyPress: '{}'", e);
 
-        controller.handleKeyPress(e);
+        KeyCode keyCode = e.getCode();
+        LOGGER.debug("handleKeyPress: keyCode '{}'", e);
 
-        if (controller.shouldRestart()) {
-            controller.stop();
-            reset();
+        if (KeyCode.ENTER.equals(keyCode)) {
+            LOGGER.debug("handleKeyPress: setupSnakeController");
+            snakeController.stop();
+            setupSnakeController();
+        } else {
+            snakeController.handleKeyPress(e);
+            if (snakeController.shouldRestart()) {
+                snakeController.stop();
+                setupSnakeController();
+            }
         }
     }
 

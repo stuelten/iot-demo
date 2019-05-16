@@ -43,15 +43,9 @@ public class Snake {
      * @param cell new cell for the head.
      */
     private void checkedMove(Cell cell) {
-        if (cells.contains(cell)) {
-            // throw new IllegalArgumentException("Cell already in snake! " +
-            // cell + ":" + this);
-            LOGGER.warn("Cell already in snake! " + cell + ":" + this);
-        } else {
-            cell = matrix.wrap(cell);
-            collided = collided || matrix.checkCollided(this, cell);
-            cells.add(cell);
-        }
+        cell = matrix.wrap(cell);
+        collided = collided || matrix.checkCollided(this, cell);
+        cells.add(cell);
     }
 
     /**
@@ -91,24 +85,25 @@ public class Snake {
         moveTo(getHead().translate(direction));
     }
 
+    public void turn(Direction direction) {
+        if (cells.isEmpty() || this.direction.noUTurn(direction))
+            this.direction = direction;
+    }
+
     public void turnNorth() {
-        if (!cells.isEmpty() && Direction.SOUTH.equals(direction)) return;
-        direction = Direction.NORTH;
+        turn(Direction.NORTH);
     }
 
     public void turnSouth() {
-        if (!cells.isEmpty() && Direction.NORTH.equals(direction)) return;
-        direction = Direction.SOUTH;
+        turn(Direction.SOUTH);
     }
 
     public void turnWest() {
-        if (!cells.isEmpty() && Direction.EAST.equals(direction)) return;
-        direction = Direction.WEST;
+        turn(Direction.WEST);
     }
 
     public void turnEast() {
-        if (!cells.isEmpty() && Direction.WEST.equals(direction)) return;
-        direction = Direction.EAST;
+        turn(Direction.EAST);
     }
 
     // Getter and Setter
@@ -144,6 +139,10 @@ public class Snake {
                 ", cells=" + cells +
                 ", direction=" + direction +
                 '}';
+    }
+
+    public Direction getDirection() {
+        return direction;
     }
 
 }

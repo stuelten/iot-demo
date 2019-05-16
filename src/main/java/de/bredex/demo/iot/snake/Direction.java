@@ -65,4 +65,30 @@ public enum Direction {
         return ret;
     }
 
+    public boolean noUTurn(Direction direction) {
+        boolean ret;
+
+        switch (this) {
+            case NONE:
+                ret = true;
+                break;
+
+            case NORTH:
+                ret = direction != SOUTH;
+                break;
+            case WEST:
+                ret = direction != EAST;
+                break;
+            case SOUTH:
+                ret = direction != NORTH;
+                break;
+            case EAST:
+                ret = direction != WEST;
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+
+        return ret;
+    }
 }

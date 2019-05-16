@@ -1,4 +1,4 @@
-package de.sty.demo.iot;
+package de.bredex.demo.iot.mqtt;
 
 import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
 import com.hivemq.client.mqtt.datatypes.MqttQos;

@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Controls the matrix's content.
  */
-public class Controller implements Runnable {
+public class SnakeController implements Runnable {
     private static final Logger LOGGER =
-            LoggerFactory.getLogger(Controller.class);
+            LoggerFactory.getLogger(SnakeController.class);
 
     private static final int COLUMNS = 15;
     private static final int ROWS = 15;
@@ -25,7 +25,11 @@ public class Controller implements Runnable {
 
     private boolean busy;
 
-    public Controller(GraphicsContext context) {
+    // my snakes are package-private
+    Snake snake0;
+    Snake snake1;
+
+    public SnakeController(GraphicsContext context) {
         Matrix matrix = new Matrix(COLUMNS, ROWS);
         this.matrix = matrix;
         this.context = context;
@@ -36,8 +40,11 @@ public class Controller implements Runnable {
         // create 2 snakes
         Cell cell1 = new Cell((int) (COLUMNS * 0.33), (int) (ROWS * 0.33));
         matrix.createSnake(Painter.SNAKE_COLOR_1, cell1);
-        Cell cell2 = new Cell((int) (COLUMNS * 0.66), (int) (ROWS * 0.66));
+        Cell cell2 = new Cell((int) (COLUMNS * 0.66), (int) (ROWS * 0.50));
         matrix.createSnake(Painter.SNAKE_COLOR_2, cell2);
+
+        snake0 = matrix.getSnakes().get(0);
+        snake1 = matrix.getSnakes().get(1);
 
         matrix.createFood();
     }
@@ -86,6 +93,10 @@ public class Controller implements Runnable {
         busy = true;
     }
 
+    public void setRestart(boolean restart) {
+        this.restart = restart;
+    }
+
     public boolean shouldRestart() {
         return restart;
     }
@@ -100,12 +111,9 @@ public class Controller implements Runnable {
         KeyCode keyCode = e.getCode();
         LOGGER.debug("handleKeyPress: keyCode '{}'", e);
 
-
-        Snake snake0 = matrix.getSnakes().get(0);
-        Snake snake1 = matrix.getSnakes().get(1);
         switch (keyCode) {
             case UP:
-                LOGGER.debug("handleKeyPress: turnNorth");
+                LOGGER.debug("handleKeyPress: turnEast");
                 snake0.turnNorth();
                 break;
             case RIGHT:
@@ -119,6 +127,16 @@ public class Controller implements Runnable {
             case LEFT:
                 LOGGER.debug("handleKeyPress: turnWest");
                 snake0.turnWest();
+                break;
+
+
+            case Y:
+                LOGGER.debug("handleKeyPress: turnLeft");
+                snake1.turn(snake1.getDirection().turnLeft());
+                break;
+            case X:
+                LOGGER.debug("handleKeyPress: turnRight");
+                snake1.turn(snake1.getDirection().turnRight());
                 break;
 
             case W:
@@ -143,6 +161,11 @@ public class Controller implements Runnable {
                 restart = true;
                 break;
         }
+    }
+
+    protected void turnSnake(Snake snake, Direction direction) {
+        LOGGER.debug("turnSnake: '{}', '{}'", snake, direction);
+        snake.turn(direction);
     }
 
 }
