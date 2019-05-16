@@ -66,7 +66,7 @@ public class SnakeFX extends Application {
 
     protected void setupMqttController() {
         LOGGER.info("setupMqttController: init snakeController");
-        snakeMqttController = new SnakeMqttController(snakeController);
+        snakeMqttController = new SnakeMqttController(this, snakeController);
 
         Thread mqttThread = new Thread(snakeMqttController);
         mqttThread.setName(snakeMqttController.getClass().getName());
@@ -80,16 +80,18 @@ public class SnakeFX extends Application {
         LOGGER.debug("handleKeyPress: keyCode '{}'", e);
 
         if (KeyCode.ENTER.equals(keyCode)) {
-            LOGGER.debug("handleKeyPress: setupSnakeController");
-            snakeController.stop();
-            setupSnakeController();
+            reset();
         } else {
             snakeController.handleKeyPress(e);
             if (snakeController.shouldRestart()) {
-                snakeController.stop();
-                setupSnakeController();
+                reset();
             }
         }
     }
 
+    public void reset() {
+        LOGGER.info("Reset Application");
+        snakeController.stop();
+        setupSnakeController();
+    }
 }

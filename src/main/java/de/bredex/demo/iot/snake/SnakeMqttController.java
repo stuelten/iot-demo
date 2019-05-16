@@ -5,6 +5,7 @@ import com.hivemq.client.mqtt.datatypes.MqttQos;
 import com.hivemq.client.mqtt.mqtt3.Mqtt3BlockingClient;
 import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
 import com.hivemq.client.mqtt.mqtt3.message.publish.Mqtt3Publish;
+import de.bredex.demo.iot.mqtt.MqttConst;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,13 +15,24 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Control {@link SnakeController} via mqtt messages.
+ * <p>
+ * The {@link Snake}s are controlled via topic {@link #TOPIC_SNAKE} with a number appended.
+ * The  {@link Direction}'s value is the {@link Mqtt3Publish#getPayloadAsBytes() payload}.
+ * To {@link SnakeController#setRestart(boolean) start a new game}, use {@code "RESET"} as
+ * {@link Mqtt3Publish#getPayloadAsBytes() payload}.
+ * </p>
  */
 public class SnakeMqttController implements Runnable {
     private static final Logger LOGGER = LoggerFactory.getLogger(SnakeMqttController.class);
 
+    public static final String TOPIC_SNAKE = "snake";
+    public static final String PAYLOAD_RESET = "RESET";
+
+    SnakeFX application;
     private SnakeController snakeController;
 
-    public SnakeMqttController(SnakeController snakeController) {
+    public SnakeMqttController(SnakeFX application, SnakeController snakeController) {
+        this.application = application;
         this.snakeController = snakeController;
     }
 
@@ -29,7 +41,7 @@ public class SnakeMqttController implements Runnable {
         LOGGER.info("Initialize...");
         Mqtt3BlockingClient client = Mqtt3Client.builder()
                 .identifier(UUID.randomUUID().toString())
-                .serverHost("192.168.100.122")
+                .serverHost(MqttConst.DEFAULT_MQTT_BROKER)
                 .buildBlocking();
         LOGGER.info("Connecting...");
         client.connect();
@@ -37,7 +49,7 @@ public class SnakeMqttController implements Runnable {
         try (final Mqtt3BlockingClient.Mqtt3Publishes publishes =
                      client.publishes(MqttGlobalPublishFilter.ALL)) {
             client.subscribeWith()
-                    .topicFilter("snake/+")
+                    .topicFilter(TOPIC_SNAKE + "/+")
                     .qos(MqttQos.AT_LEAST_ONCE)
                     .send();
 
@@ -53,7 +65,7 @@ public class SnakeMqttController implements Runnable {
     }
 
     private void received(Mqtt3Publish mqtt3Publish) {
-        LOGGER.info("received: '{}'", mqtt3Publish);
+        LOGGER.info("received: '{}', '{}'", mqtt3Publish, new String(mqtt3Publish.getPayloadAsBytes()));
 
         List<String> levels = mqtt3Publish.getTopic().getLevels();
         try {
@@ -72,8 +84,8 @@ public class SnakeMqttController implements Runnable {
             }
 
             String payload = new String(mqtt3Publish.getPayloadAsBytes());
-            if ("RESET".equalsIgnoreCase(payload)) {
-                snakeController.setRestart(true);
+            if (PAYLOAD_RESET.equalsIgnoreCase(payload)) {
+                application.reset();
             } else {
                 Direction direction = Direction.valueOf(payload);
 
