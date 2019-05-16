@@ -13,8 +13,8 @@ public class Controller implements Runnable {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(Controller.class);
 
-    private static final int COLUMNS = 10;
-    private static final int ROWS = 10;
+    private static final int COLUMNS = 15;
+    private static final int ROWS = 15;
 
     private Matrix matrix;
     private GraphicsContext context;
@@ -29,8 +29,7 @@ public class Controller implements Runnable {
         Matrix matrix = new Matrix(COLUMNS, ROWS);
         this.matrix = matrix;
         this.context = context;
-        frameInterval = 100;
-        running = true;
+        frameInterval = 200;
         restart = false;
         busy = false;
 
@@ -45,6 +44,7 @@ public class Controller implements Runnable {
 
     @Override
     public void run() {
+        running = true;
         while (running) {
             // when should the next frame be painted?
             long nextFrame = System.currentTimeMillis() + frameInterval;
@@ -91,55 +91,57 @@ public class Controller implements Runnable {
     }
 
     public void handleKeyPress(KeyEvent e) {
+        // Only one key press per frame
         if (isBusy()) {
             return;
         }
         setBusy();
 
         KeyCode keyCode = e.getCode();
-        LOGGER.info("handleKeyPress: keyCode '{}'", e);
+        LOGGER.debug("handleKeyPress: keyCode '{}'", e);
 
 
         Snake snake0 = matrix.getSnakes().get(0);
         Snake snake1 = matrix.getSnakes().get(1);
         switch (keyCode) {
             case UP:
-                LOGGER.info("handleKeyPress: turnNorth");
+                LOGGER.debug("handleKeyPress: turnNorth");
                 snake0.turnNorth();
                 break;
             case RIGHT:
-                LOGGER.info("handleKeyPress: turnEast");
+                LOGGER.debug("handleKeyPress: turnEast");
                 snake0.turnEast();
                 break;
             case DOWN:
-                LOGGER.info("handleKeyPress: turnSouth");
+                LOGGER.debug("handleKeyPress: turnSouth");
                 snake0.turnSouth();
                 break;
             case LEFT:
-                LOGGER.info("handleKeyPress: turnWest");
+                LOGGER.debug("handleKeyPress: turnWest");
                 snake0.turnWest();
                 break;
 
             case W:
-                LOGGER.info("handleKeyPress: turnNorth");
+                LOGGER.debug("handleKeyPress: turnNorth");
                 snake1.turnNorth();
                 break;
             case D:
-                LOGGER.info("handleKeyPress: turnEast");
+                LOGGER.debug("handleKeyPress: turnEast");
                 snake1.turnEast();
                 break;
             case S:
-                LOGGER.info("handleKeyPress: turnSouth");
+                LOGGER.debug("handleKeyPress: turnSouth");
                 snake1.turnSouth();
                 break;
             case A:
-                LOGGER.info("handleKeyPress: turnWest");
+                LOGGER.debug("handleKeyPress: turnWest");
                 snake1.turnWest();
                 break;
 
             case ENTER:
-                LOGGER.info("handleKeyPress: reset");
+                LOGGER.debug("handleKeyPress: reset");
                 restart = true;
+                break;
         }
     }
 

@@ -63,6 +63,7 @@ public class SnakeFX extends Application {
         controller.handleKeyPress(e);
 
         if (controller.shouldRestart()) {
+            controller.stop();
             reset();
         }
     }

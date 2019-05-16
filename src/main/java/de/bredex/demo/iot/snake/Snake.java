@@ -44,12 +44,14 @@ public class Snake {
      */
     private void checkedMove(Cell cell) {
         if (cells.contains(cell)) {
-            throw new IllegalArgumentException("Cell already in snake! " + cell + ":" + this);
+            // throw new IllegalArgumentException("Cell already in snake! " +
+            // cell + ":" + this);
+            LOGGER.warn("Cell already in snake! " + cell + ":" + this);
+        } else {
+            cell = matrix.wrap(cell);
+            collided = collided || matrix.checkCollided(this, cell);
+            cells.add(cell);
         }
-
-        cell = matrix.wrap(cell);
-        collided = collided || matrix.checkCollided(this, cell);
-        cells.add(cell);
     }
 
     /**
@@ -130,7 +132,7 @@ public class Snake {
      * @return The head of the Snake.
      */
     public Cell getHead() {
-        return cells.get(0);
+        return cells.get(cells.size() - 1);
     }
 
     @Override
