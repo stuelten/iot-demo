@@ -13,8 +13,8 @@ public class SnakeController implements Runnable {
     private static final Logger LOGGER =
             LoggerFactory.getLogger(SnakeController.class);
 
-    private static final int COLUMNS = 15;
-    private static final int ROWS = 15;
+    private static final int COLUMNS = 20;
+    private static final int ROWS = 20;
 
     private Matrix matrix;
     private GraphicsContext context;

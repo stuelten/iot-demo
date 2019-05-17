@@ -4,11 +4,7 @@ import javafx.scene.paint.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * The positional system for the game. This grid will be rendered in the Canvas.
@@ -26,7 +22,8 @@ public class Matrix {
     private int rows;
 
     private List<Snake> snakes = new ArrayList<>();
-    private Cell food;
+    // private Cell food;
+    private List<Cell> foods = new ArrayList<>();
 
     public Matrix(int columns, int rows) {
         this.columns = columns;
@@ -48,7 +45,10 @@ public class Matrix {
      * Add food on some empty cell in the matrix.
      */
     void createFood() {
-        this.food = getRandomPoint();
+        int maxFoods = (int) (Math.random() * 12);
+        for (int i = 0; i < maxFoods; i++) {
+            this.foods.add(getRandomPoint());
+        }
         LOGGER.info("createFood: '{}'", this);
     }
 
@@ -71,6 +71,8 @@ public class Matrix {
         Cell ret;
 
         Set<Cell> usedCells = new HashSet<>();
+        usedCells.addAll(foods);
+
         for (Snake snake : snakes) {
             usedCells.addAll(snake.getCells());
         }
@@ -91,15 +93,20 @@ public class Matrix {
         // Let each snake eat or move
         // this way food can get eaten multiple times
         for (Snake snake : snakes) {
-            if (food.equals(snake.getHead())) {
-                snake.eatFoodAndGrow();
-                foodEaten = true;
-            } else {
+            for (Cell food : foods) {
+                if (food.equals(snake.getHead())) {
+                    snake.eatFoodAndGrow();
+                    foods.remove(food);
+                    foodEaten = true;
+                    break;
+                }
+            }
+            if (!foodEaten) {
                 snake.moveIntoCurrentDirection();
             }
         }
 
-        if (foodEaten) {
+        if (foodEaten && foods.isEmpty()) {
             // create new food
             createFood();
         }
@@ -117,9 +124,9 @@ public class Matrix {
         return snakes;
     }
 
-    public Cell getFood() {
-        return food;
-    }
+//    public Cell getFood() {
+//        return food;
+//    }
 
     @Override
     public String toString() {
@@ -127,7 +134,7 @@ public class Matrix {
                 "columns=" + columns +
                 ", rows=" + rows +
                 ", snakes=" + snakes +
-                ", food=" + food +
+                //", food=" + food +
                 '}';
     }
 
@@ -142,5 +149,9 @@ public class Matrix {
         }
 
         return ret;
+    }
+
+    public Iterable<Cell> getFoods() {
+        return Collections.unmodifiableList(foods);
     }
 }

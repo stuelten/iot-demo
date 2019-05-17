@@ -39,7 +39,7 @@ public class Painter {
 
         // Now the Food
         context.setFill(FOOD_COLOR);
-        paintCell(matrix.getFood(), CELL_WIDTH, CELL_HEIGHT, context);
+        matrix.getFoods().forEach(food -> paintCell(food, CELL_WIDTH, CELL_HEIGHT, context));
 
         // Now the snakes
         for (Snake snake : matrix.getSnakes()) {
